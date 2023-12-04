@@ -15,6 +15,7 @@ void DrawBoard::Init(int32 size,Player *player)
 /* Mazes For Programmers */
 void DrawBoard::GenerateMap()
 {
+	/*
 	for (int r = 0; r < _size; r++)
 	{
 		for (int c = 0; c < _size; c++)
@@ -55,6 +56,8 @@ void DrawBoard::GenerateMap()
 			}
 		}
 	}
+	*/
+
 }
 
 TileType DrawBoard::GetTileType(Pos pos)
@@ -88,6 +91,7 @@ ConsoleColor DrawBoard::GetTileColor(Pos pos)
 
 	return ConsoleColor::BLACK; //default
 }
+
 void DrawBoard::Render()
 {
 	ConsoleHelper::SetCursorPosition(0, 0);

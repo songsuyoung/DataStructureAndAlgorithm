@@ -25,13 +25,13 @@ public:
 	TileType GetTileType(Pos pos);
 	ConsoleColor GetTileColor(Pos pos);
 	void Render();
-
+	int32 GetSize() { return _size; }
 	Pos GetEnterPos() { return Pos{ make_pair(1,1) }; }
 	Pos GetExitPos() { return Pos{ make_pair(_size-2,_size-2) }; }
 
 private:
 	const char* TILE = "■"; //const char 는 문자열을 의미
-	TileType _tile[BOARD_MAX_SIZE][BOARD_MAX_SIZE];
+	TileType _tile[BOARD_MAX_SIZE][BOARD_MAX_SIZE] = {};
 	int32 _size = 0;
 	Player* _player = nullptr;
 };

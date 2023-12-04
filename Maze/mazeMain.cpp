@@ -25,7 +25,7 @@ int main()
 		//로직 - 플레이어 이동, 몬스터AI
 
 		//렌더링 - 게임을 컴퓨터 내 구현
-
+		player.Update(deltaTick);
 		//맵을 그려줌 
 		board.Render();
 	}
