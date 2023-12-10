@@ -12,6 +12,10 @@ public:
 	void SetPos(Pos pos) { _pos = pos; }
 	Pos GetPos() { return _pos; }
 	bool CanGo(Pos pos);
+
+private:
+	void FindRightHands(const Pos& start, const Pos& end);
+	void Bfs(Pos& start,Pos& end);
 private:
 
 	Pos _pos;

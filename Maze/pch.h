@@ -35,6 +35,11 @@ struct Pos
 
 		return *this;
 	}
+	bool operator<(const Pos& other) const
+	{
+		if (this->pos.first == other.pos.first) return pos.second < other.pos.second;
+		return pos.first < other.pos.first;
+	}
 };
 
 enum Dir
