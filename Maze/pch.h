@@ -5,7 +5,7 @@
 #include "type.h"
 using namespace std;
 
-//ÁÂÇ¥ °ü¸®¿ë
+//ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 struct Pos
 {
 	pair<int32, int32> pos;
@@ -44,7 +44,6 @@ struct Pos
 
 enum Dir
 {
-	//¹Ý½Ã°è ¹æÇâÀ¸·Î ±¸Çö
 	D_UP=0,
 	D_LEFT,
 	D_DOWN,

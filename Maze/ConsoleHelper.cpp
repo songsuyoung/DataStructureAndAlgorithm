@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "ConsoleHelper.h"
-//¸ÊÀ» ±×·ÁÁÖ´Â ¿ªÇÒ 
+//ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
 void ConsoleHelper::SetCursorPosition(int32 x, int32 y)
 {
-	//Å¬¸¯ÇÑ À§Ä¡¸¦ ¼³Á¤
-	//À©µµ¿ì ÇÔ¼ö
+	//Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	HANDLE output = ::GetStdHandle(STD_OUTPUT_HANDLE);
-	//coordinate ÁÂÇ¥¿¡ ´ëÇÑ ±¸Á¶Ã¼¸¦ °¡Á®¿Í¼­
+	//coordinate ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½
 	COORD pos = { static_cast<SHORT>(x), static_cast<SHORT>(y) };
-	::SetConsoleCursorPosition(output, pos); //Ä¿¼­ À§Ä¡¸¦ º¯°æ
+	::SetConsoleCursorPosition(output, pos); //Ä¿ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 }
 
 void ConsoleHelper::SetCursorColor(ConsoleColor color)

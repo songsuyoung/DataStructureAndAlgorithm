@@ -8,7 +8,7 @@ class Player
 	};
 public:
 	void Init(DrawBoard* board);
-	void Update(uint64 deltaTick); //¸Å ÇÁ·¹ÀÓ¸¶´Ù ±æÃ£±â ¾Ë°í¸®Áò ¼öÇà
+	void Update(uint64 deltaTick); //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void SetPos(Pos pos) { _pos = pos; }
 	Pos GetPos() { return _pos; }
 	bool CanGo(Pos pos);
@@ -16,6 +16,7 @@ public:
 private:
 	void FindRightHands(const Pos& start, const Pos& end);
 	void Bfs(Pos& start,Pos& end);
+	void AStar(Pos& start, Pos& end);
 private:
 
 	Pos _pos;

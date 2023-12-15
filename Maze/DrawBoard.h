@@ -7,13 +7,13 @@ enum
 
 enum class TileType
 {
-	NONE = 0,//¾ÆÁ÷ ¾øÀ½
-	EMPTY, //°Ç³Î ¼ö ÀÖÀ½
-	WALL, //º®
-	CURRPOS, //ÀÔÀå
-	EXIT, //Å»Ãâ
+	NONE = 0,
+	EMPTY, 
+	WALL,
+	CURRPOS,
+	EXIT,
 };
-class  Player; //Àü¹æ ¼±¾ğÀ» ÀÌ¿ëÇØ¼­ Çì´õ ÆÄÀÏ ¼±¾ğÇÏÁö ¾Êµµ·Ï ÇØÁÜ
+class  Player;
 class DrawBoard
 {
 public:
@@ -30,7 +30,7 @@ public:
 	Pos GetExitPos() { return Pos{ make_pair(_size-2,_size-2) }; }
 
 private:
-	const char* TILE = "¡á"; //const char ´Â ¹®ÀÚ¿­À» ÀÇ¹Ì
+	const char* TILE = "â¬›"; //const char ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½Ç¹ï¿½
 	TileType _tile[BOARD_MAX_SIZE][BOARD_MAX_SIZE] = {};
 	int32 _size = 0;
 	Player* _player = nullptr;

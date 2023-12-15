@@ -9,29 +9,29 @@ void Player::Init(DrawBoard* board)
 	_pos = board->GetEnterPos();
 	_board = board;
 
-	//½Ã¹Ä·¹ÀÌ¼Ç - ¿À¸¥¼Õ ¹ıÄ¢ 
+	//ï¿½Ã¹Ä·ï¿½ï¿½Ì¼ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¢ 
 
 	Pos pos = _pos;
 	Pos exitPos = board->GetExitPos();
 
 	_path.clear();
 
-	Bfs(pos, exitPos);
+	AStar(pos, exitPos);
 }
 
 
 void Player::Update(uint64 deltaTick)
 {
-	//±æÃ£±â ¾Ë°í¸®Áò ¼öÇà
-	//¸ÅÃÊ¸¶´Ù ¿òÁ÷ÀÌ°Ô ²û ¼öÇà
-
-	//0.1ÃÊ¸¶´Ù ¿òÁ÷ÀÏ ¼ö ÀÖµµ·Ï ±¸Çö
-	//1ÃÊ¿¡ 1 ÇÁ·¹ÀÓ
-	if (_pathIdx >= _path.size()) return;
+	if (_pathIdx >= _path.size())
+	{
+		_board->GenerateMap();
+		Init(_board);
+		return;
+	}
 
 	_sumTick += deltaTick;
 
-	if (_sumTick >= WORK_TICK) { //0.1ÃÊ °æ°ú
+	if (_sumTick >= WORK_TICK) { //0.1ï¿½ï¿½ ï¿½ï¿½ï¿½
 		_sumTick = 0;
 		_pos = _path[_pathIdx];
 		_pathIdx++;
@@ -56,17 +56,8 @@ void Player::FindRightHands(const Pos &start, const Pos &end)
 	int cnt = 0;
 	while (pos != exitPos)
 	{
-		// ÇöÀç ¹Ù¶óº¸´Â ¹æÇâÀ» ±âÁØÀ¸·Î ¿À¸¥ÂÊÀ¸·Î °¥ ¼ö ÀÖ´ÂÁö È®ÀÎ
-		/*
-		ÇöÀç ¹İ½Ã°è ¹æÇâ
-		ºÏ0 - (¿À)µ¿3
-		¼­1 - (¿À)ºÏ0
-		³²2 - (¿À)¼­1
-		µ¿3 - (¿À)³²2
-		*/
-		//¿À¸¥ÂÊ ¹æÇâ ÀÌµ¿
 		if (cnt == (_board->GetSize() * _board->GetSize()))
-			break; //¸ø³ª¿À´Â °æ¿ì
+			break; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
 		int32 newDir = (D_COUNT + _dir - 1) % D_COUNT;
 
@@ -78,35 +69,35 @@ void Player::FindRightHands(const Pos &start, const Pos &end)
 			_dir = newDir;
 			pos = nextRight;
 			_path.push_back(nextRight);
-			//¿À¸¥ÂÊ ºñ¾îÀÖÀ½ ÀÌµ¿
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 		}
 		else if (CanGo(Pos{ nextUp }))
 		{
-			//Á÷¼± ºñ¾îÀÖÀ½ ÀÌµ¿      
+			//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½      
 			pos = nextUp;
 			_path.push_back(nextUp);
 		}
 		else
 		{
-			//¿ŞÂÊÀ¸·Î È¸Àü
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
 			_dir = (_dir + 1) % D_COUNT;
 		}
 
 		cnt++;
 	}
 
-	//path¿¬»ê ÈÄ Á¦°ÅÇÏ´Â ¹æ½Ä
+	//pathï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
 	stack<Pos> s;
 
 	for (int i = 0; i < _path.size() - 1; i++)
 	{
-		//s top°ú °°À¸¸é ´õÀÌ»ó °¡Áö ¾Ê°í, s.topÀ» popÇÑ´Ù.
+		//s topï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½, s.topï¿½ï¿½ popï¿½Ñ´ï¿½.
 		if (!s.empty() && s.top() == _path[i + 1])
 			s.pop();
-		else // ÇÑ¹ø¸¸ °¬À» ¶§¸¸ _path¿¡ »ğÀÔÇÑ´Ù.
+		else // ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ _pathï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 			s.push(_path[i]);
 	}
-	//¸ñÀûÁö¶ó¸é? »ğÀÔ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½? ï¿½ï¿½ï¿½ï¿½
 	if (_path.empty() == false)
 		s.push(_path.back());
 
@@ -132,7 +123,7 @@ void Player::Bfs(Pos& start, Pos& end)
 
 	const int32 SIZE = _board->GetSize();
 	vector<vector<bool>> isVisited(SIZE, vector<bool>(SIZE, false));
-	map<Pos, Pos> parent; //½ÃÀÛÁ¡Àº ÀÚ±â ÀÚ½Å
+	map<Pos, Pos> parent; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú±ï¿½ ï¿½Ú½ï¿½
 	parent[start] = start;
 
 	while (!q.empty())
@@ -143,7 +134,7 @@ void Player::Bfs(Pos& start, Pos& end)
 		if (isVisited[curPos.pos.first][curPos.pos.second]) continue;
 		if (curPos == end)
 		{
-			//µµÂø
+			//ï¿½ï¿½ï¿½ï¿½
 			break;
 		}
 		isVisited[curPos.pos.first][curPos.pos.second] = true;
@@ -162,7 +153,7 @@ void Player::Bfs(Pos& start, Pos& end)
 			}
 		}
 	}
-	//°Å²Ù·Î ¿Ã¶ó°¨
+	//ï¿½Å²Ù·ï¿½ ï¿½Ã¶ï¿½
 	Pos pos = end;
 	while (true)
 	{
@@ -172,5 +163,108 @@ void Player::Bfs(Pos& start, Pos& end)
 		pos = parent[pos];
 	}
 
+	reverse(_path.begin(), _path.end());
+}
+struct PQNode
+{
+	bool operator<(const PQNode& other) const
+	{
+		return f < other.f;
+	}
+	bool operator>(const PQNode& other) const
+	{
+		return f > other.f;
+	}
+	int32 f;
+	int32 g;
+	Pos p;
+};
+
+int32 GetHeuristic(int cost,const pair<int,int> &dest,const pair<int,int> &start)
+{
+	//row ì°¨ì´ì™€ col ì°¨ì´ì— ëŒ€í•´ ë¹„ìš© ë‹¨ìœ„ë¥¼ ê³±í•¨ 
+	//í”¼íƒ€ê³ ë¼ìŠ¤ì˜ ì •ì˜ë¥¼ ì´ìš©í•´ì„œ distanceë¥¼ êµ¬í•  ìˆ˜ ìˆìŒ.
+	return cost * (abs(dest.first - start.first) + abs(dest.second - start.second));
+}
+void Player::AStar(Pos& start, Pos& end)
+{
+
+	//ì ìˆ˜ ë§¤ê¸°ê¸° -> í‰ê°€ ì‹œìŠ¤í…œ
+	//ê°€ì¤‘ì¹˜ì˜ í•©(dijkstra)
+	//F = G + H(Heuristic)
+	//F = ìµœì¢… ì ìˆ˜ (ì‘ì„ ìˆ˜ë¡ ì¢‹ìŒ, ê²½ë¡œì— ë”°ë¼ ë‹¬ë¼ì§)
+	//G = ì‹œì‘ì ì—ì„œ í•´ë‹¹ ì¢Œí‘œê¹Œì§€ì˜ ë¹„ìš© (ì‘ì„ ìˆ˜ë¡ ì¢‹ìŒ ë˜í•œ, ê²½ë¡œì— ë”°ë¼ ë‹¬ë¼ì§)
+	//H = ëª©ì ì§€ì—ì„œ ì–¼ë§ˆë‚˜ ê°€ê¹Œìš´ì§€ (ì‘ì„ ìˆ˜ë¡ ì¢‹ìŒ, ê³ ì •)
+
+	//UP,LEFT,DOWN,RIGHT,UP-LEFT,DOWN-LEFT,DOWN-RIGHT,UP-RIGHT
+	const size_t DIR_COUNT = 8;
+
+	int rows[8] = { -1,0,1,0,-1,1,1,-1 };
+	int cols[8] = { 0,-1,0,1,-1,-1,1,1 };
+
+	//1:1:ë£¨íŠ¸2 ê³µì‹ì— ì˜í•´ì„œ costë¹„ìš©ì„ 14ë¡œ í˜•í‰ì„± ìˆê²Œ ì¼ì¹˜ ì‹œì¼œì¤Œ.
+	int32 cost[] = { 10, 10, 10, 10, 14, 14, 14, 14};
+
+	const int32 SIZE = _board->GetSize();
+
+	map<Pos, Pos> parent; //ë¶€ëª¨ ì¶”ì  ìš©ë„
+	
+	//OpenList (ì˜ˆì•½ëœ(ì¦‰ ë°©ë¬¸í• ) ë…¸ë“œ)
+	priority_queue<PQNode> q;
+	
+	//[r,c]ì— ëŒ€í•œ ì§€ê¸ˆê¹Œì§€ ê°€ì¥ ì¢‹ì€ ë¹„ìš©
+	vector<vector<int32>> best(SIZE, vector<int32>(SIZE,INT32_MAX));
+	//ì´ì¤‘ ë°©ë¬¸ì„ ë§‰ì•„ì¤Œ, ClosedList (ì´ë¯¸ ë°©ë¬¸ëœ ë…¸ë“œ)
+	vector<vector<bool>> isVisited(SIZE, vector<bool>(SIZE, false));
+
+	// 1) ì˜ˆì•½(ë°œê²¬) ì‹œìŠ¤í…œ êµ¬í˜„
+	// 2) ë’¤ ëŠ¦ê²Œ ë” ì¢‹ì€ ê²½ë¡œê°€ ë°œê²¬ë  ìˆ˜ ìˆìŒ -> ì˜ˆì™¸ ì²˜ë¦¬ í•„ìˆ˜ : priority_queue
+	{
+		int g = 0;//ì‹œì‘ì 
+		int h = GetHeuristic(cost[0], end.pos, start.pos);
+		q.push( PQNode{ g+h,g,start });
+		best[start.pos.first][start.pos.second] = g + h;
+		parent[start] = start;
+	}
+	
+	while (!q.empty())
+	{
+		PQNode cur = q.top();
+		q.pop();
+
+		if (isVisited[cur.p.pos.first][cur.p.pos.second]) continue;
+		//ë°©ë¬¸ í–ˆìœ¼ë‹ˆ, ClosedNodeë¥¼ ì´ìš©í•´ ë‚˜ ì´ë¯¸ ë°©ë¬¸ í–ˆì–´.
+		isVisited[cur.p.pos.first][cur.p.pos.second] = true;
+	
+		if (cur.p == end) break; //ë„ì°©í•˜ì˜€ìŒ.
+
+		for (int32 dir = 0; dir < DIR_COUNT; dir++)
+		{
+			int nextR = cur.p.pos.first + rows[dir];
+			int nextC = cur.p.pos.second + cols[dir];
+
+			Pos nextPos = Pos{ make_pair(nextR,nextC) };
+			int32 g = cur.g+cost[dir];
+			int32 h = GetHeuristic(cost[dir], make_pair(nextR,nextC), cur.p.pos);
+
+			if (CanGo(nextPos) == false) continue;
+			if (isVisited[nextR][nextC]==false&&best[nextR][nextC] > (g + h))
+			{
+				best[nextR][nextC] = g + h; //ê°±ì‹ 
+				q.push({ g + h,g,nextPos});
+				parent[nextPos] = cur.p;
+			}
+		}
+	}
+	_path.clear();
+	Pos pos = end;
+	while (true)
+	{
+		_path.push_back(pos);
+		if (pos == parent[pos])
+			break;
+		pos = parent[pos];
+	}
+	_pathIdx = 0;
 	reverse(_path.begin(), _path.end());
 }

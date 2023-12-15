@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include "type.h"
-//»ö»ó ÁöÁ¤
+//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 enum class ConsoleColor
 {
 	BLACK=0,
@@ -11,12 +11,12 @@ enum class ConsoleColor
 	YELLOW = RED | GREEN,
 	WHITE = RED|GREEN|BLUE,
 };
-//ÇÏ³ª¸¸ Á¸ÀçÇÏ±â ¶§¹®¿¡ Á¤Àû ÇÔ¼ö·Î ¼±¾ð, ¹Ì·Î ÄÜ¼ÖÀ» µµ¿ÍÁÖ´Â Å¬·¡½º
+//ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Ì·ï¿½ ï¿½Ü¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 class ConsoleHelper
 {
 public:
-	static void SetCursorPosition(int32 x, int32 y); //32¹ÙÀÌÆ®¸¦ »ç¿ëÇÏ´Â ÀÌÀ¯ : ÇöÀç ÇØ»óµµ¿¡ ¸ÂÃß±â ¶§¹®¿¡
+	static void SetCursorPosition(int32 x, int32 y); //32ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ ï¿½Ø»óµµ¿ï¿½ ï¿½ï¿½ï¿½ß±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	static void SetCursorColor(ConsoleColor colr);
-	static void ShowCursolConsole(bool flag); //Ä¿¼­¸¦ º¸¿©ÁÙÁö ¾Èº¸¿©ÁÙÁö °áÁ¤
+	static void ShowCursolConsole(bool flag); //Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 };
 

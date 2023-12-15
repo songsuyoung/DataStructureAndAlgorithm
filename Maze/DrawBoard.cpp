@@ -11,51 +11,95 @@ void DrawBoard::Init(int32 size,Player *player)
 	GenerateMap();
 }
 
-//Binary Tree ¹Ì·Î »ý¼º ¾Ë°í¸®Áò
+//Binary Tree ï¿½Ì·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë°ï¿½ï¿½ï¿½ï¿½
 /* Mazes For Programmers */
 void DrawBoard::GenerateMap()
 {
-	for (int r = 0; r < _size; r++)
+	for (int32 y = 0; y < _size; y++)
 	{
-		for (int c = 0; c < _size; c++)
+		for (int32 x = 0; x < _size; x++)
 		{
-			if (r == 0 || c == 0 || r==(_size-1)|| c==(_size-1)|| r % 2 == 0 || c % 2 == 0)
-			{
-				//¿Ü°û
-				_tile[r][c] = TileType::WALL;
-			}
+			if (x % 2 == 0 || y % 2 == 0)
+				_tile[y][x] = TileType::WALL;
 			else
-			{
-				//³»ºÎ
-				_tile[r][c] = TileType::EMPTY;
-			}
+				_tile[y][x] = TileType::EMPTY;
 		}
 	}
 
-	//º® ¶Õ±â ÀÛ¾÷ 
-	
-	for (int r = 0; r < _size; r++)
+	// ëžœë¤ìœ¼ë¡œ ìš°ì¸¡ í˜¹ì€ ì•„ëž˜ë¡œ ê¸¸ì„ ëš«ëŠ” ìž‘ì—…
+	for (int32 y = 0; y < _size; y++)
 	{
-		for (int c = 0; c < _size; c++)
+		for (int32 x = 0; x < _size; x++)
 		{
-			//º®ÀÏ¶§´Â ¾È¶ÕÀ½!
-			if (r % 2 == 0 || c % 2 == 0) continue;				
-			//2ºÐÀÇ 1 È®·ü·Î ¿À¸¥ÂÊÀ» ¶Õ°Å³ª ¾Æ·¡¸¦ ¶ÕÀ» ¿¹Á¤
-			
-			const int32 randVal = ::rand() % 2;
-			if (randVal == 0) //¿À¸¥ÂÊ
+			if (x % 2 == 0 || y % 2 == 0)
+				continue;
+			if (y == _size - 2 && x == _size - 2)
+				continue;
+
+			if (y == _size - 2)
 			{
-				if (c + 1 == (_size - 1)) continue;
-				_tile[r][c + 1] = TileType::EMPTY;
+				_tile[y][x + 1] = TileType::EMPTY;
+				continue;
 			}
-			else //¾Æ·¡
+
+			if (x == _size - 2)
 			{
-				if (r + 1 == (_size - 1)) continue;
-				_tile[r + 1][c] = TileType::EMPTY;
+				_tile[y + 1][x] = TileType::EMPTY;
+				continue;
+			}
+
+			const int32 randValue = ::rand() % 2;
+			if (randValue == 0)
+			{
+				_tile[y][x + 1] = TileType::EMPTY;
+			}
+			else
+			{
+				_tile[y + 1][x] = TileType::EMPTY;
 			}
 		}
 	}
-	
+	//for (int r = 0; r < _size; r++)
+	//{
+	//	for (int c = 0; c < _size; c++)
+	//	{
+	//		if (r == 0 || c == 0 || r==(_size-1)|| c==(_size-1)|| r % 2 == 0 || c % 2 == 0)
+	//		{
+	//			//ï¿½Ü°ï¿½
+	//			_tile[r][c] = TileType::WALL;
+	//		}
+	//		else
+	//		{
+	//			//ï¿½ï¿½ï¿½ï¿½
+	//			_tile[r][c] = TileType::EMPTY;
+	//		}
+	//	}
+	//}
+
+	////ï¿½ï¿½ ï¿½Õ±ï¿½ ï¿½Û¾ï¿½ 
+	//
+	//for (int r = 0; r < _size; r++)
+	//{
+	//	for (int c = 0; c < _size; c++)
+	//	{
+	//		//ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½ ï¿½È¶ï¿½ï¿½ï¿½!
+	//		if (r % 2 == 0 || c % 2 == 0) continue;				
+	//		//2ï¿½ï¿½ï¿½ï¿½ 1 È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Õ°Å³ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//		
+	//		const int32 randVal = ::rand() % 2;
+	//		if (randVal == 0) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//		{
+	//			if (c + 1 == (_size - 1)) continue;
+	//			_tile[r][c + 1] = TileType::EMPTY;
+	//		}
+	//		else //ï¿½Æ·ï¿½
+	//		{
+	//			if (r + 1 == (_size - 1)) continue;
+	//			_tile[r + 1][c] = TileType::EMPTY;
+	//		}
+	//	}
+	//}
+	//
 
 }
 
@@ -100,7 +144,7 @@ void DrawBoard::Render()
 	{
 		for (int32 c = 0; c < _size; c++)
 		{
-			ConsoleColor color = GetTileColor(Pos{make_pair(r,c)}); //ÃÊ±âÈ­ ¸®½ºÆ® »ç¿ë
+			ConsoleColor color = GetTileColor(Pos{make_pair(r,c)}); //ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½
 			ConsoleHelper::SetCursorColor(color);
 			cout << TILE;
 		}
