@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleHelper.cpp" />
+    <ClCompile Include="DisjointSet.cpp" />
     <ClCompile Include="DrawBoard.cpp" />
     <ClCompile Include="mazeMain.cpp" />
     <ClCompile Include="pch.cpp">
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleHelper.h" />
+    <ClInclude Include="DisjointSet.h" />
     <ClInclude Include="DrawBoard.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />

@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "type.h"
 using namespace std;
 

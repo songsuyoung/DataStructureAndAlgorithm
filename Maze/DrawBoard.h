@@ -13,6 +13,8 @@ enum class TileType
 	CURRPOS,
 	EXIT,
 };
+
+
 class  Player;
 class DrawBoard
 {
@@ -21,7 +23,8 @@ public:
 	~DrawBoard() {}
 
 	void Init(int32 size,Player* player);
-	void GenerateMap();
+	void GenerateMap_PrimAlgorithm();
+	void GenerateMap_KruskalAlgorithm();
 	TileType GetTileType(Pos pos);
 	ConsoleColor GetTileColor(Pos pos);
 	void Render();

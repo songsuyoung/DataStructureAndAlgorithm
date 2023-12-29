@@ -2,19 +2,31 @@
 #include "DrawBoard.h"
 #include "ConsoleHelper.h"
 #include "Player.h"
+#include "DisjointSet.h"
+#include <queue>
+#include <map>
 
 void DrawBoard::Init(int32 size,Player *player)
 {
 	_player = player;
 	
 	_size = size;
-	GenerateMap();
+	GenerateMap_PrimAlgorithm();
 }
 
-//Binary Tree �̷� ���� �˰����
-/* Mazes For Programmers */
-void DrawBoard::GenerateMap()
+void DrawBoard::GenerateMap_PrimAlgorithm()
 {
+	struct CostEdge
+	{ //2차원 좌표
+		Pos u;
+		int cost;
+
+		bool operator<(const CostEdge& other) const
+		{
+			return cost < other.cost;
+		}
+	};
+
 	for (int32 y = 0; y < _size; y++)
 	{
 		for (int32 x = 0; x < _size; x++)
@@ -26,81 +38,161 @@ void DrawBoard::GenerateMap()
 		}
 	}
 
-	// 랜덤으로 우측 혹은 아래로 길을 뚫는 작업
+
+	map<Pos, vector<CostEdge>> edges;
+
+	for (int32 y = 0; y < _size; y++)
+	{
+		for (int32 x = 0; x < _size; x++)
+		{
+			if (x % 2 == 0 || y % 2 == 0) continue; //벽일 때임
+
+			//우측 연결하는 간선 후보
+			if (x < _size - 2) //벽이 아닐때, [u] [wall] [v] 로 구성해서 u-v간의 길이를 표현
+			{
+				const int32 randVal = static_cast<int32>(rand() % 100 + 1);
+				//맨 끝에 도달하지 않았다.
+				Pos u = Pos{ make_pair(y,x) };
+				Pos v = Pos{ make_pair(y,x + 2) };
+
+				edges[u].push_back(CostEdge{ v,randVal });
+			}
+			if (y < _size - 2)
+			{
+				//맨 끝에 도달하지 않았다.
+				const int32 randVal = static_cast<int32>(rand() % 100 + 1);
+				//맨 끝에 도달하지 않았다.
+				Pos u = Pos{ make_pair(y,x) };
+				Pos v = Pos{ make_pair(y+2,x) };
+
+				edges[u].push_back(CostEdge{ v,randVal });
+			}
+		}
+	}
+
+	priority_queue<CostEdge> pq;
+	map<Pos, bool> isVisited;
+	map<Pos, Pos> parent;
+	map<Pos, int32> best; 
+
+
+	for (int32 y = 0; y < _size; y++)
+	{
+		for (int32 x = 0; x < _size; x++)
+		{
+			best[Pos{ make_pair(y,x) }] = INT32_MAX;
+			isVisited[Pos{ make_pair(y,x) }] = false;
+		}
+	}
+
+	Pos startPos = Pos{ make_pair(1,1) };
+	pq.push(CostEdge{ startPos,0 });
+	best[startPos] = 0;
+	parent[startPos] = startPos;
+
+	while (!pq.empty())
+	{
+		CostEdge cur = pq.top();
+		pq.pop();
+
+		if (isVisited[cur.u]) continue;
+		isVisited[cur.u] = true;
+
+		int row = (parent[cur.u].pos.first + cur.u.pos.first) / 2;
+		int col = (parent[cur.u].pos.second + cur.u.pos.second) / 2;
+
+		_tile[row][col] = TileType::EMPTY;
+
+		for (int i = 0; i < edges[cur.u].size(); i++)
+		{
+			if (isVisited[edges[cur.u][i].u]) continue;
+			CostEdge next = edges[cur.u][i];
+			int costs = edges[cur.u][i].cost;
+			if (best[next.u] > costs)
+			{
+				best[next.u] = costs;
+				parent[edges[cur.u][i].u] = cur.u;
+				pq.push(edges[cur.u][i]);
+			}
+		}
+	}
+
+}
+
+
+//Binary Tree 생성 알고리즘 => Kruskal 도입
+/* Mazes For Programmers */
+void DrawBoard::GenerateMap_KruskalAlgorithm()
+{
+	struct CostEdge
+	{ //2차원 좌표
+		Pos u;
+		Pos v;
+		int cost;
+
+		bool operator<(const CostEdge& other)
+		{
+			return cost < other.cost;
+		}
+	};
+
 	for (int32 y = 0; y < _size; y++)
 	{
 		for (int32 x = 0; x < _size; x++)
 		{
 			if (x % 2 == 0 || y % 2 == 0)
-				continue;
-			if (y == _size - 2 && x == _size - 2)
-				continue;
-
-			if (y == _size - 2)
-			{
-				_tile[y][x + 1] = TileType::EMPTY;
-				continue;
-			}
-
-			if (x == _size - 2)
-			{
-				_tile[y + 1][x] = TileType::EMPTY;
-				continue;
-			}
-
-			const int32 randValue = ::rand() % 2;
-			if (randValue == 0)
-			{
-				_tile[y][x + 1] = TileType::EMPTY;
-			}
+				_tile[y][x] = TileType::WALL;
 			else
+				_tile[y][x] = TileType::EMPTY;
+		}
+	}
+
+	//랜덤으로 수를 뚫어줌
+	vector<CostEdge> edges;
+
+	for (int32 y = 0; y < _size; y++)
+	{
+		for (int32 x = 0; x < _size; x++)
+		{
+			if (x % 2 == 0 || y % 2 == 0) continue; //벽일 때임
+
+			//우측 연결하는 간선 후보
+			if (x < _size - 2) //벽이 아닐때, [u] [wall] [v] 로 구성해서 u-v간의 길이를 표현
 			{
-				_tile[y + 1][x] = TileType::EMPTY;
+				//맨 끝에 도달하지 않았다.
+				const int32 randVal = static_cast<int32>(rand() % 100+1);
+				edges.push_back(CostEdge{ Pos{make_pair(y,x)},Pos{make_pair(y,x+2)},randVal });
+			}
+
+			if (y < _size - 2)
+			{
+				//맨 끝에 도달하지 않았다.
+				const int32 randVal = static_cast<int32>(rand() % 100 + 1);
+				edges.push_back(CostEdge{ Pos{make_pair(y,x)},Pos{make_pair(y+2,x)},randVal });
 			}
 		}
 	}
-	//for (int r = 0; r < _size; r++)
-	//{
-	//	for (int c = 0; c < _size; c++)
-	//	{
-	//		if (r == 0 || c == 0 || r==(_size-1)|| c==(_size-1)|| r % 2 == 0 || c % 2 == 0)
-	//		{
-	//			//�ܰ�
-	//			_tile[r][c] = TileType::WALL;
-	//		}
-	//		else
-	//		{
-	//			//����
-	//			_tile[r][c] = TileType::EMPTY;
-	//		}
-	//	}
-	//}
 
-	////�� �ձ� �۾� 
-	//
-	//for (int r = 0; r < _size; r++)
-	//{
-	//	for (int c = 0; c < _size; c++)
-	//	{
-	//		//���϶��� �ȶ���!
-	//		if (r % 2 == 0 || c % 2 == 0) continue;				
-	//		//2���� 1 Ȯ���� �������� �հų� �Ʒ��� ���� ����
-	//		
-	//		const int32 randVal = ::rand() % 2;
-	//		if (randVal == 0) //������
-	//		{
-	//			if (c + 1 == (_size - 1)) continue;
-	//			_tile[r][c + 1] = TileType::EMPTY;
-	//		}
-	//		else //�Ʒ�
-	//		{
-	//			if (r + 1 == (_size - 1)) continue;
-	//			_tile[r + 1][c] = TileType::EMPTY;
-	//		}
-	//	}
-	//}
-	//
+	std::sort(edges.begin(), edges.end()); //작은 순서로 정렬
 
+	DisjointSet ds(_size* _size);
+
+	for (int i = 0; i < edges.size(); i++)
+	{
+		//1차원 배열로 관리하기 위함.
+		int u = edges[i].u.pos.first * _size + edges[i].u.pos.second;
+		int v = edges[i].v.pos.first * _size + edges[i].v.pos.second;
+		if (ds.Find(u) != ds.Find(v))
+		{
+			ds.Union(u, v);
+
+			//[u] [wall] [v]  <- 설정되어있음.
+			// 중간 값을 u+v 좌표 /2 를 수행
+			int row = (edges[i].u.pos.first + edges[i].v.pos.first) / 2;
+			int col = (edges[i].u.pos.second + edges[i].v.pos.second) / 2;
+			_tile[row][col] = TileType::EMPTY;
+		}
+	}
 }
 
 TileType DrawBoard::GetTileType(Pos pos)

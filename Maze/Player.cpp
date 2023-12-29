@@ -24,7 +24,7 @@ void Player::Update(uint64 deltaTick)
 {
 	if (_pathIdx >= _path.size())
 	{
-		_board->GenerateMap();
+		_board->GenerateMap_PrimAlgorithm();
 		Init(_board);
 		return;
 	}
@@ -197,7 +197,6 @@ void Player::AStar(Pos& start, Pos& end)
 	//H = 목적지에서 얼마나 가까운지 (작을 수록 좋음, 고정)
 
 	//UP,LEFT,DOWN,RIGHT,UP-LEFT,DOWN-LEFT,DOWN-RIGHT,UP-RIGHT
-	const size_t DIR_COUNT = 8;
 
 	int rows[8] = { -1,0,1,0,-1,1,1,-1 };
 	int cols[8] = { 0,-1,0,1,-1,-1,1,1 };
@@ -238,7 +237,7 @@ void Player::AStar(Pos& start, Pos& end)
 	
 		if (cur.p == end) break; //도착하였음.
 
-		for (int32 dir = 0; dir < DIR_COUNT; dir++)
+		for (int32 dir = 0; dir < D_COUNT; dir++)
 		{
 			int nextR = cur.p.pos.first + rows[dir];
 			int nextC = cur.p.pos.second + cols[dir];
